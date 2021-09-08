@@ -137,6 +137,8 @@ Blue                                                             Red
 #define RUN_IN 1
 #define RUN_OUT 2
 
+#define BALANCE_TIME 1000
+
 bool fault = false;
 
 int fix_timer;
@@ -199,12 +201,15 @@ void loop() {
   }
 
   if (up_switch && down_switch) {
-    fault = true;
+    set_motor_state(BOTH_MOTOR, RUN_OFF);
+    delay(1000);
+    return;
   }
 
   if (fault) {
     Serial.print("fault!\n");
-    delay(1000);
+    delay(30000);
+    fault = false;
     return;
   }
 
@@ -237,7 +242,7 @@ void loop() {
 
   if (left_switch) {
     delay_next = 10;
-    fix_timer = 750;
+    fix_timer = BALANCE_TIME;
     fix_direction = LEFT_MOTOR;
     Serial.println("fix left");
     return;
@@ -245,7 +250,7 @@ void loop() {
 
   if (right_switch) {
     delay_next = 10;
-    fix_timer = 750;
+    fix_timer = BALANCE_TIME;
     fix_direction = RIGHT_MOTOR;
     Serial.println("fix right");
     return;
